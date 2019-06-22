@@ -9,8 +9,6 @@ import os.path
 from .crc import Crc8
 
 DEVICE_BUS = 1
-BASELINE_FILENAME = os.path.expanduser("~/.sgp_config_data.txt")
-
 
 class _cmds():
     """container class for mapping between human readable names and the command values used by the sgp"""
@@ -32,12 +30,12 @@ class _cmds():
 
 class SGP30():
 
-    def __init__(self, bus, device_address=0x58, baseline_filename=BASELINE_FILENAME):
+    def __init__(self, bus, device_address=0x58, baseline=[]):
         self._bus = bus
         self._device_addr = device_address
         self._start_time = time()
         self._last_save_time = time()
-        self._baseline_filename = baseline_filename
+        self._baseline = baseline
 
     SGP30Answer = namedtuple("SGP30Answer", ["data", "raw", "crc_ok"])
 
@@ -60,32 +58,21 @@ class SGP30():
             answer = [i << 8 | j for i, j in a]
             return self.SGP30Answer(answer, r, crc_ok)
 
-    def store_baseline(self):
-        with open(self._baseline_filename, "w") as conf:
-            baseline = self.read_write(_cmds.GET_BASELINE)
-            if baseline.crc_ok == True:
-                json.dump(baseline.raw, conf)
-                return True
-            else:
-                #print("Ignoring baseline due to invalid CRC")
-                return False
-
-    def try_set_baseline(self):
-        try:
-            with open(self._baseline_filename, "r") as conf:
-                conf = json.load(conf)
-        except IOError:
-            pass
-        except ValueError:
-            pass
-        else:
-            crc, _ = self._raw_validate_crc(conf)
-            if len(conf) == 6 and crc == True:
-                self.read_write(_cmds.new_set_baseline(conf))
-                return True
-            else:
-                #print("Failed to load baseline, invalid data")
-                return False
+    def dump_baseline(self):
+		baseline = self.read_write(_cmds.GET_BASELINE)
+		if baseline.crc_ok == True:
+			print(baseline)
+		else:
+			print("Ignoring baseline due to invalid CRC")
+			
+    def set_baseline(self):
+		crc, _ = self._raw_validate_crc(self._baseline)
+		if len(self._baseline) == 6 and crc == True:
+			self.read_write(_cmds.new_set_baseline(self._baseline))
+			return True
+		else:
+			#print("Failed to load baseline, invalid data")
+			return False
 
     def read_measurements(self):
         return self.read_write(_cmds.IAQ_MEASURE)
@@ -100,7 +87,6 @@ class SGP30():
         return self.read_write(_cmds.GET_FEATURES)
 
     def init_sgp(self):
-        #print("Initializing SGP30")
         self.read_write(_cmds.IAQ_INIT)
 
     def i2c_general_call(self):
@@ -114,7 +100,7 @@ class SGP30():
         affect any device on the bus.
         """
         self._bus.write_byte(0, 0x06)
-        sleep(.1)
+        sleep(0.1)
 
 
 def main():
