@@ -1,4 +1,4 @@
-class Crc8:
+class CRC8:
     def __init__(s):
         s.crc = 255
 
@@ -18,6 +18,6 @@ class Crc8:
         s.crc = crc & 0xFF
         return s.crc
 
-# print(Crc8().hash([1,144]))
-#print(hex(Crc8().hash([0xBE, 0xEF])))
+#print(CRC8().hash([1,144]))
+#print(hex(CRC8().hash([0xBE, 0xEF])))
 #[1, 144, 76, 0, 6, 39]

@@ -10,7 +10,7 @@ with open('LICENSE') as f:
 
 setup(
     name='sgp30',
-    description='Library for reading data from the sensiron SGP30',
+    description='Library for reading data from the Sensirion SGP30',
     version='0.1.5',
     long_description=readme,
     author='Simon Albinsson',
