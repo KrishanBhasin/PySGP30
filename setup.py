@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Learn more: https://github.com/zinob/RPI_SGP30
+# Learn more: https://github.com/Conr86/PySGP30
 
 from setuptools import setup, find_packages
 
@@ -9,12 +9,12 @@ with open('LICENSE') as f:
     license = f.read()
 
 setup(
-    name='sgp30',
+    name='pysgp30',
     description='Library for reading data from the Sensirion SGP30',
-    version='0.1.5',
+    version='0.1.6',
     long_description=readme,
-    author='Simon Albinsson',
-    author_email='pipmon@zinob.se',
+    author='Connor Kneebone',
+    author_email='connor@sfxrescue.com',
     url='https://github.com/zinob/RPI_SGP30',
     license='MIT',
     packages=find_packages(exclude=('tests')),
