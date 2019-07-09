@@ -18,6 +18,6 @@ class CRC8:
         s.crc = crc & 0xFF
         return s.crc
 
-#print(CRC8().hash([1,144]))
+# print(CRC8().hash([1,144]))
 #print(hex(CRC8().hash([0xBE, 0xEF])))
 #[1, 144, 76, 0, 6, 39]

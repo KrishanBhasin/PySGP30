@@ -15,7 +15,7 @@ setup(
     long_description=readme,
     author='Connor Kneebone',
     author_email='connor@sfxrescue.com',
-    url='https://github.com/zinob/RPI_SGP30',
+    url='https://github.com/Conr86/PySGP30',
     license='MIT',
     packages=find_packages(exclude=('tests')),
     install_requires=['smbus2'],

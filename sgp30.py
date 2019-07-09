@@ -8,6 +8,7 @@ from .crc import CRC8
 
 DEVICE_BUS = 1
 
+
 class _cmds():
     """container class for mapping between human readable names and the command values used by the sgp"""
     SGP30Cmd = namedtuple("SGP30Cmd", ["commands", "replylen", "waittime"])
@@ -57,20 +58,20 @@ class SGP30():
             return self.SGP30Packet(answer, r, crc_ok)
 
     def dump_baseline(self):
-		baseline = self.read_write(_cmds.GET_BASELINE)
-		if baseline.crc_ok == True:
-			print(baseline)
-		else:
-			print("Ignoring baseline due to invalid CRC")
-			
+        baseline = self.read_write(_cmds.GET_BASELINE)
+        if baseline.crc_ok == True:
+            print(baseline)
+        else:
+            print("Ignoring baseline due to invalid CRC")
+
     def set_baseline(self):
-		crc, _ = self._raw_validate_crc(self._baseline)
-		if len(self._baseline) == 6 and crc == True:
-			self.read_write(_cmds.new_set_baseline(self._baseline))
-			return True
-		else:
-			#print("Failed to load baseline, invalid data")
-			return False
+        crc, _ = self._raw_validate_crc(self._baseline)
+        if len(self._baseline) == 6 and crc == True:
+            self.read_write(_cmds.new_set_baseline(self._baseline))
+            return True
+        else:
+            #print("Failed to load baseline, invalid data")
+            return False
 
     def read_measurements(self):
         return self.read_write(_cmds.IAQ_MEASURE)
@@ -110,9 +111,9 @@ def main():
         print(sgp.read_serial())
         sgp.init_sgp()
         for i in range(300):
-			print(sgp.read_measurements())
-			time.sleep(0.1)
-		sgp.store_baseline()
+            print(sgp.read_measurements())
+            time.sleep(0.1)
+        sgp.store_baseline()
     bus.close()
 
 
