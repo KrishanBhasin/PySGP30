@@ -1,13 +1,7 @@
 import smbus2
-from smbus2 import SMBusWrapper, SMBus, i2c_msg
 from collections import namedtuple
-from functools import partial
-from time import sleep, asctime, time
-from copy import copy
+import time
 from .crc import CRC8
-
-DEVICE_BUS = 1
-
 
 class _cmds():
     """container class for mapping between human readable names and the command values used by the sgp"""
@@ -29,12 +23,10 @@ class _cmds():
 
 class SGP30():
 
-    def __init__(self, bus, device_address=0x58, baseline=[]):
-        self._bus = bus
-        self._device_addr = device_address
-        self._start_time = time()
-        self._last_save_time = time()
-        self._baseline = baseline
+    def __init__(self, bus, address=0x58, baseline=[]):
+        self.bus = bus
+        self.address = address
+        self.baseline = baseline
 
     SGP30Packet = namedtuple("SGP30Packet", ["data", "raw", "crc_ok"])
 
@@ -44,14 +36,14 @@ class SGP30():
         return(crc, a)
 
     def read_write(self, cmd):
-        write = i2c_msg.write(self._device_addr, cmd.commands)
+        write = smbus2.i2c_msg.write(self.address, cmd.commands)
         if cmd.replylen <= 0:
-            self._bus.i2c_rdwr(write)
+            self.bus.i2c_rdwr(write)
         else:
-            read = i2c_msg.read(self._device_addr, cmd.replylen)
-            self._bus.i2c_rdwr(write)
-            sleep(cmd.waittime/1000.0)
-            self._bus.i2c_rdwr(read)
+            read = smbus2.i2c_msg.read(self.address, cmd.replylen)
+            self.bus.i2c_rdwr(write)
+            time.sleep(cmd.waittime/1000.0)
+            self.bus.i2c_rdwr(read)
             r = list(read)
             crc_ok, a = self._raw_validate_crc(r)
             answer = [i << 8 | j for i, j in a]
@@ -65,9 +57,9 @@ class SGP30():
             print("Ignoring baseline due to invalid CRC")
 
     def set_baseline(self):
-        crc, _ = self._raw_validate_crc(self._baseline)
-        if len(self._baseline) == 6 and crc == True:
-            self.read_write(_cmds.new_set_baseline(self._baseline))
+        crc, _ = self._raw_validate_crc(self.baseline)
+        if len(self.baseline) == 6 and crc == True:
+            self.read_write(_cmds.new_set_baseline(self.baseline))
             return True
         else:
             #print("Failed to load baseline, invalid data")
@@ -98,24 +90,5 @@ class SGP30():
         This will usually un-stick the SGP30, but might reset or otherwise
         affect any device on the bus.
         """
-        self._bus.write_byte(0, 0x06)
-        sleep(0.1)
-
-
-def main():
-    with SMBusWrapper(1) as bus:
-        sgp = SGP30(bus, baseline_filename=BASELINE_FILENAME+".TESTING")
-        print("resetting all i2c devices")
-        sgp.i2c_general_call()
-        print(sgp.read_features())
-        print(sgp.read_serial())
-        sgp.init_sgp()
-        for i in range(300):
-            print(sgp.read_measurements())
-            time.sleep(0.1)
-        sgp.store_baseline()
-    bus.close()
-
-
-if __name__ == "__main__":
-    main()
+        self.bus.write_byte(0, 0x06)
+        time.sleep(0.1)
