@@ -1,23 +1,20 @@
-# -*- coding: utf-8 -*-
-# Learn more: https://github.com/Conr86/PySGP30
+#!/usr/bin/env python3
+import setuptools
 
-from setuptools import setup, find_packages
-
-with open('README.md') as f:
+with open('README.md', 'r') as f:
     readme = f.read()
-with open('LICENSE') as f:
-    license = f.read()
 
-setup(
-    name='pysgp30',
+setuptools.setup(
+    name='PySGP30',
     description='Library for reading data from the Sensirion SGP30',
     version='0.1.6',
-    long_description=readme,
     author='Connor Kneebone',
     author_email='connor@sfxrescue.com',
     url='https://github.com/Conr86/PySGP30',
     license='MIT',
-    packages=find_packages(exclude=('tests')),
+    packages=setuptools.find_packages(exclude=('tests')),
+    long_description=readme,
+    long_description_content_type="text/markdown",
     install_requires=['smbus2'],
     classifiers=[
         'Development Status :: 4 - Beta',
