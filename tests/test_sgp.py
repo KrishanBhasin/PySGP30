@@ -13,7 +13,7 @@ class TestConstructor(unittest.TestCase):
 
     def test_general_call(self):
         b=sgp30.sgp30.Sgp30(self.bus)
-        b.i2c_geral_call()
+        b.i2c_general_call()
         self.assertEqual(self.bus.addr,0)
         self.assertEqual(self.bus.last,0x06)
 
