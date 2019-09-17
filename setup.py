@@ -7,7 +7,7 @@ with open('README.md', 'r') as f:
 setuptools.setup(
     name='PySGP30',
     description='Library for reading data from the Sensirion SGP30',
-    version='0.1.6',
+    version='0.1.8',
     author='Connor Kneebone',
     author_email='connor@sfxrescue.com',
     url='https://github.com/Conr86/PySGP30',
