@@ -1,7 +1,7 @@
 SGP30
 =========
 
-Library to read eCO2 and TVOC from the [SGP30 sensor](https://www.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/9_Gas_Sensors/Sensirion_Gas_Sensors_SGP30_Datasheet_EN.pdf). Based on the _smbus2_ i2c library for ease of use.
+Library to read eCO2 and TVOC from the [SGP30 sensor](https://cdn-learn.adafruit.com/assets/assets/000/050/058/original/Sensirion_Gas_Sensors_SGP30_Datasheet_EN.pdf). Based on the _smbus2_ i2c library for ease of use.
 
 It should be compatible with both Python 2 and 3
 
